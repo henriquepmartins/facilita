@@ -19,6 +19,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Currencies, Currency } from "@/lib/currencies";
+import { useQuery } from "@tanstack/react-query";
 
 export function CurrencyComboBox() {
   const [open, setOpen] = React.useState(false);
@@ -27,6 +28,13 @@ export function CurrencyComboBox() {
     null
   );
 
+  const userSettings = useQuery({
+    queryKey: ["userSettings"],
+    queryFn: () => fetch("/api/user-settings").then((res) => res.json()),
+  });
+
+  console.log("@@@ USER SETTINGS", userSettings);
+  
   if (isDesktop) {
     return (
       <Popover open={open} onOpenChange={setOpen}>

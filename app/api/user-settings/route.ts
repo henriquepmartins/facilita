@@ -1,5 +1,6 @@
-import prisma from "@/server/db";
+import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function GET(request: Request) {
@@ -9,7 +10,7 @@ export async function GET(request: Request) {
     redirect("/sign-in");
   }
 
-  const userSettings = await prisma.userSettings.findUnique({
+  let userSettings = await prisma.userSettings.findUnique({
     where: {
       userId: user.id,
     },
@@ -23,4 +24,8 @@ export async function GET(request: Request) {
       },
     });
   }
+  
+  //revalidação da homepage que usa a currency do user
+  revalidatePath("/");
+  return Response.json(userSettings);
 }
