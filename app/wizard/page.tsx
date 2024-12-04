@@ -1,4 +1,3 @@
-"use client";
 import { CurrencyComboBox } from "@/components/CurrencyComboBox";
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
@@ -10,23 +9,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import { redirect } from "next/navigation";
+import React from "react";
 
-function WizardPage() {
-  const { isLoaded, isSignedIn, user } = useUser();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push("/sign-in");
-    }
-  }, [isLoaded, isSignedIn, router]);
-
-  if (!isLoaded || !isSignedIn) {
-    return null;
+async function WizardPage() {
+  const user = await currentUser();
+  if (!user) {
+    redirect("/sign-in");
   }
 
   return (

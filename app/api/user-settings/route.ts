@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     redirect("/sign-in");
   }
 
-  let userSettings = await prisma.userSettings.findUnique({
+  let userSettings = await prisma.userSettings.findFirst({
     where: {
       userId: user.id,
     },
@@ -24,8 +24,8 @@ export async function GET(request: Request) {
       },
     });
   }
-  
-  //revalidação da homepage que usa a currency do user
+  console.log("Configurações criadas:", userSettings);
+
   revalidatePath("/");
   return Response.json(userSettings);
 }

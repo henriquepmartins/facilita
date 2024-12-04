@@ -1,14 +1,9 @@
 import "@/styles/globals.css";
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import RootProviders from "@/components/providers/RootProviders";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +22,7 @@ export default function RootLayout({
         <body
           className={`flex min-h-screen items-center justify-center ${inter.className}`}
         >
+          <Toaster richColors position="bottom-right" />
           <RootProviders>{children}</RootProviders>
         </body>
       </html>
