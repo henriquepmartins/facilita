@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Receipt, Settings, Menu, Search } from "lucide-react";
+import {
+  LayoutDashboard,
+  Receipt,
+  Settings,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { ThemeSwitcherBtn } from "./ThemeSwitcherBtn";
 import Logo from "./Logo";
@@ -56,7 +63,7 @@ export function AppSidebar() {
           isOpen && "hidden"
         )}
       >
-        <Menu className="h-4 w-4" />
+        <ChevronRight className="h-4 w-4" />
       </button>
 
       {/* Sidebar */}
@@ -65,7 +72,7 @@ export function AppSidebar() {
           "fixed inset-y-0 left-0 z-40 h-screen flex-shrink-0 border-r bg-background transition-all duration-300 lg:sticky lg:top-0",
           isOpen
             ? "w-64 translate-x-0 lg:w-72"
-            : "translate-x-0 lg:w-24 flex flex-col items-center"
+            : "-translate-x-full lg:translate-x-0 lg:w-24 lg:flex lg:flex-col lg:items-center"
         )}
       >
         <div className="flex h-full flex-col">
@@ -80,7 +87,11 @@ export function AppSidebar() {
               onClick={() => setIsOpen(!isOpen)}
               className="rounded-lg border p-2 hover:bg-muted"
             >
-              <Menu className="h-4 w-4" />
+              {isOpen ? (
+                <ChevronLeft className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
             </button>
           </div>
 
@@ -91,19 +102,17 @@ export function AppSidebar() {
                 "flex items-center gap-2 rounded-lg border bg-background text-sm text-muted-foreground",
                 isOpen ? "px-3 py-2 w-full" : "justify-center p-2"
               )}
-              onClick={() => {
-                /* Open command palette */
-              }}
+              onClick={() => {}}
             >
               <Search className="h-4 w-4" />
-              {isOpen && <span className="ml-3">Buscar...</span>}
+              {isOpen && <span className="ml-1">Buscar...</span>}
             </button>
           </div>
 
           {/* Navigation */}
           <nav
             className={cn(
-              "flex-1 px-2 overflow-y-auto",
+              "flex-1 px-2 overflow-y-auto mt-4",
               isOpen ? "space-y-6" : "flex flex-col items-center gap-4"
             )}
           >
@@ -157,7 +166,6 @@ export function AppSidebar() {
               </>
             ) : (
               <>
-                {/* Inverte as posições e adiciona margem apenas no estado colapsado */}
                 <ThemeSwitcherBtn />
                 <div className="mt-2">
                   <UserButton afterSignOutUrl="/" />

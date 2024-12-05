@@ -5,6 +5,14 @@ import { redirect } from "next/navigation";
 import React from "react";
 import CreateTransactionDialog from "./_components/CreateTransactionDialog";
 
+function getGreeting() {
+  const hour = new Date().getHours();
+
+  if (hour >= 5 && hour < 12) return "Bom dia";
+  if (hour >= 12 && hour < 18) return "Boa tarde";
+  return "Boa noite";
+}
+
 async function page() {
   const user = await currentUser();
   if (!user) {
@@ -25,7 +33,9 @@ async function page() {
     <div className="h-full bg-background">
       <div className="border-b bg-card">
         <div className="container flex flex-wrap items-center justify-between gap-6 py-8">
-          <p className="text-3xl font-bold">Olá, {user.firstName}! 👋</p>
+          <p className="text-xl font-semibold">
+            {getGreeting()}, {user.firstName}. 👋
+          </p>
           <div className="flex items-center gap-3">
             <CreateTransactionDialog
               trigger={
