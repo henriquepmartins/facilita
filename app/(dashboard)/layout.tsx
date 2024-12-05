@@ -1,13 +1,16 @@
-import Navbar from "@/components/Navbar";
-import React from "react";
+import { AppSidebar } from "@/components/Navbar";
 
-function layout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <div className="relative h-screen w-full flex-col">
-      <Navbar />
-      <div className="w-full">{children}</div>
+    <div className="relative flex min-h-screen w-full">
+      <AppSidebar />
+      <main className="flex-1 overflow-y-auto">
+        <div className="p-8">{children}</div>
+      </main>
     </div>
   );
 }
-
-export default layout;
