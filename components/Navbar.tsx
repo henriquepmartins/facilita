@@ -49,7 +49,7 @@ const navigationItems = {
 };
 
 export function AppSidebar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const pathname = usePathname();
   const { user } = useUser();
 
