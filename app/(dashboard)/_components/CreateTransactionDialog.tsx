@@ -24,7 +24,7 @@ import {
   CreateTransactionSchema,
   CreateTransactionSchemaType,
 } from "@/schema/transaction";
-import { ReactNode, useCallback } from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
@@ -35,9 +35,11 @@ import { format } from "date-fns";
 import { CalendarIcon, Loader2 } from "lucide-react";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { Calendar } from "@/components/ui/calendar";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CreateTransaction } from "../_actions/transactions";
 import { toast } from "sonner";
+import { CreateCategorySchemaType } from "@/schema/categoires";
+import { DateToUTCDate } from "@/lib/helpers";
 
 interface Props {
   trigger: ReactNode;
@@ -53,6 +55,8 @@ function CreateTransactionDialog({ trigger, type }: Props) {
     },
   });
 
+  const [open, setOpen] = useState(false);
+
   const handleCatgoryChange = useCallback(
     (value: string) => {
       form.setValue("category", value);
@@ -60,19 +64,45 @@ function CreateTransactionDialog({ trigger, type }: Props) {
     [form]
   );
 
+  const queryClient = useQueryClient();
+
   const { mutate, isPending } = useMutation({
     mutationFn: CreateTransaction,
     onSuccess: () => {
-      toast.success("Transação criada com sucesso!");
-      form.reset();
-    },
-    onError: () => {
-      toast.error("Algo deu errado na criação da transação");
+      toast.success("Transação criada com sucesso!", {
+        id: "create-transaction",
+      });
+      form.reset({
+        type,
+        description: "",
+        amount: 0,
+        date: new Date(),
+        category: undefined,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["overview"],
+      });
+
+      setOpen((prev) => !prev);
     },
   });
 
+  const onSubmit = useCallback(
+    (values: CreateTransactionSchemaType) => {
+      toast.loading("Criando transação...", {
+        id: "create-transaction",
+      });
+      mutate({
+        ...values,
+        date: DateToUTCDate(values.date),
+      });
+    },
+    [mutate]
+  );
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -90,12 +120,12 @@ function CreateTransactionDialog({ trigger, type }: Props) {
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
               name="description"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col">
                   <FormLabel>Descrição</FormLabel>
                   <FormControl>
                     <Input defaultValue={""} {...field} />
@@ -110,7 +140,7 @@ function CreateTransactionDialog({ trigger, type }: Props) {
               control={form.control}
               name="amount"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col">
                   <FormLabel>Quantidade</FormLabel>
                   <FormControl>
                     <Input defaultValue={0} type="number" {...field} />
@@ -172,7 +202,10 @@ function CreateTransactionDialog({ trigger, type }: Props) {
                         <Calendar
                           mode="single"
                           selected={field.value}
-                          onSelect={field.onChange}
+                          onSelect={(value) => {
+                            if (!value) return;
+                            field.onChange(value);
+                          }}
                           initialFocus
                           className="bg-popover rounded-md w-full"
                           popoverProps={{
@@ -221,7 +254,7 @@ function CreateTransactionDialog({ trigger, type }: Props) {
             </Button>
           </DialogClose>
           <Button onClick={form.handleSubmit(onSubmit)} disabled={isPending}>
-            {!isPending && "Create"}
+            {!isPending && "Criar"}
             {isPending && <Loader2 className="animate-spin" />}
           </Button>
         </DialogFooter>
