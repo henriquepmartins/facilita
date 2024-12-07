@@ -2,7 +2,9 @@
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -14,6 +16,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { TransactionType } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -29,9 +32,12 @@ import CategoryPicker from "./CategoryPicker";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { Calendar } from "@/components/ui/calendar";
+import { useMutation } from "@tanstack/react-query";
+import { CreateTransaction } from "../_actions/transactions";
+import { toast } from "sonner";
 
 interface Props {
   trigger: ReactNode;
@@ -53,6 +59,17 @@ function CreateTransactionDialog({ trigger, type }: Props) {
     },
     [form]
   );
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: CreateTransaction,
+    onSuccess: () => {
+      toast.success("Transação criada com sucesso!");
+      form.reset();
+    },
+    onError: () => {
+      toast.error("Algo deu errado na criação da transação");
+    },
+  });
 
   return (
     <Dialog>
@@ -185,12 +202,29 @@ function CreateTransactionDialog({ trigger, type }: Props) {
                     <FormDescription>
                       Selecione uma data para essa transação.
                     </FormDescription>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
           </form>
         </Form>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button
+              variant={"secondary"}
+              onClick={() => {
+                form.reset();
+              }}
+            >
+              Cancelar
+            </Button>
+          </DialogClose>
+          <Button onClick={form.handleSubmit(onSubmit)} disabled={isPending}>
+            {!isPending && "Create"}
+            {isPending && <Loader2 className="animate-spin" />}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
