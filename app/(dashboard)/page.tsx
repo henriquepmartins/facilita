@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import React from "react";
 import CreateTransactionDialog from "./_components/CreateTransactionDialog";
 import Overview from "./_components/Overview";
+import History from "./_components/History";
 
 function getGreeting() {
   const hour = new Date().getHours();
@@ -64,6 +65,7 @@ async function page() {
         </div>
       </div>
       <Overview userSettings={userSettings} />
+      <History userSettings={userSettings} />
     </div>
   );
 }

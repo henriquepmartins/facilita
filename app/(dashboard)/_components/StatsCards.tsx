@@ -40,7 +40,7 @@ function StatCard({ formatter, value, icon, title }: StatCardProps) {
           end={value}
           decimals={2}
           formattingFn={formatFn}
-          className="text-lg sm:text-xl md:text-2xl"
+          className="text-base sm:text-lg md:text-xl font-medium"
         />
       </div>
     </Card>
