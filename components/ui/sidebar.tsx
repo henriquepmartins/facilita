@@ -2,7 +2,7 @@
 
 import * as Headless from "@headlessui/react";
 import clsx from "clsx";
-import { LayoutGroup, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import React, { Fragment, forwardRef, useId } from "react";
 import { TouchTarget } from "./button";
 import Link from "next/link";
