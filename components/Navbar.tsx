@@ -40,8 +40,8 @@ const navigationItems = {
     label: "Sistema",
     items: [
       {
-        title: "Gerenciamento",
-        href: "/gerenciamento",
+        title: "Configurações",
+        href: "/configuracoes",
         icon: Settings,
       },
     ],
@@ -132,7 +132,7 @@ export function AppSidebar() {
             {Object.entries(navigationItems).map(([key, section]) => (
               <div key={key} className="w-full">
                 {isOpen && (
-                  <h4 className="px-2 text-xs font-semibold text-muted-foreground">
+                  <h4 className="px-2 text-xs mb-1 font-semibold text-muted-foreground">
                     {section.label}
                   </h4>
                 )}
