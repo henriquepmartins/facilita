@@ -40,8 +40,8 @@ const navigationItems = {
     label: "Sistema",
     items: [
       {
-        title: "Gerenciamento",
-        href: "/gerenciamento",
+        title: "Configurações",
+        href: "/configuracoes",
         icon: Settings,
       },
     ],
