@@ -62,9 +62,12 @@ function HistoryPeriodSelector({
         ) : (
           <YearSelector period={period} setPeriod={setPeriod} years={years} />
         )}
-        {timeframe === "month" && (
-          <MonthSelector period={period} setPeriod={setPeriod} />
-        )}
+        {timeframe === "month" &&
+          (isLoading ? (
+            <Skeleton className="h-10 w-[180px]" />
+          ) : (
+            <MonthSelector period={period} setPeriod={setPeriod} />
+          ))}
       </div>
     </div>
   );
