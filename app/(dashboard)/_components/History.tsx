@@ -1,13 +1,24 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { GetFormaterForCurrency } from "@/lib/helpers";
 import { Period, Timeframe } from "@/lib/types";
 import { UserSettings } from "@prisma/client";
 import React, { useMemo, useState } from "react";
 import HistoryPeriodSelector from "./HistoryPeriodSelector";
 import { useQuery } from "@tanstack/react-query";
+import SkeletonWrapper from "@/components/SkeletonWrapper";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { cn } from "@/lib/utils";
 
 function History({ userSettings }: { userSettings: UserSettings }) {
   const [timeframe, setTimeframe] = useState<Timeframe>("month");
@@ -60,9 +71,129 @@ function History({ userSettings }: { userSettings: UserSettings }) {
             </div>
           </CardTitle>
         </CardHeader>
+        <SkeletonWrapper isLoading={historyDataQuery.isFetching}>
+          <CardContent>
+            {dataAvailable ? (
+              <ResponsiveContainer width={"100%"} height={300}>
+                <BarChart
+                  height={300}
+                  data={historyDataQuery.data}
+                  barCategoryGap={5}
+                >
+                  <defs>
+                    <linearGradient id="incomeBar" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset={"0"} stopColor="#10b981" stopOpacity={1} />
+                      <stop offset={"1"} stopColor="#10b981" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="expenseBar" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset={"0"} stopColor="#ef4444" stopOpacity={1} />
+                      <stop offset={"1"} stopColor="#ef4444" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid
+                    strokeDasharray="5 5"
+                    strokeOpacity={0.2}
+                    vertical={false}
+                  />
+                  <XAxis
+                    stroke="#888888"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                    padding={{ left: 5, right: 5 }}
+                    dataKey={(data) => {
+                      const { year, month, day } = data;
+                      const date = new Date(year, month, day || 1);
+                      if (timeframe === "year") {
+                        return date.toLocaleDateString("default", {
+                          month: "long",
+                        });
+                      }
+                      return date.toLocaleDateString("default", {
+                        day: "2-digit",
+                      });
+                    }}
+                  />
+                  <YAxis
+                    stroke="#888888"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <Bar
+                    dataKey={"income"}
+                    label="Proventos"
+                    fill="url(#incomeBar)"
+                    radius={4}
+                    className="cursor-pointer"
+                  />
+                  <Bar
+                    dataKey={"expense"}
+                    label="Despesas"
+                    fill="url(#expenseBar)"
+                    radius={4}
+                    className="cursor-pointer"
+                  />
+                  <Tooltip
+                    cursor={{ opacity: 0.1 }}
+                    content={(props) => (
+                      <CustomTooltip formatter={formatter} {...props} />
+                    )}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <Card className="flex h-[300px] flex-col items-center justify-center bg-background">
+                Nenhum dado disponível para o período selecionado
+                <p className="text-sm text-muted-foreground">
+                  Tente selecionar outro período ou adicionar uma nova
+                  transação.
+                </p>
+              </Card>
+            )}
+          </CardContent>
+        </SkeletonWrapper>
       </Card>
     </div>
   );
 }
 
 export default History;
+
+function CustomTooltip({ formatter, active, payload }: any) {
+  if (!active || !payload || payload.length === 0) return null;
+
+  const data = payload[0].payload;
+  const { expense, income } = data;
+  return (
+    <div className="min-w-[300px] rounded border bg-background p-4">
+      <TooltipRow
+        formatter={formatter}
+        label="Despesas"
+        value={expense}
+        bgColor="bg-red-500"
+        textColor="text-red-500"
+      />
+    </div>
+  );
+}
+
+function TooltipRow({
+  label,
+  value,
+  bgColor,
+  textColor,
+  formatter,
+}: {
+  label: string;
+  value: number;
+  bgColor: string;
+  textColor: string;
+  formatter: Intl.NumberFormat;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      <div className={cn("h-4 w-4 rounded-full", bgColor)} />
+    </div>
+  );
+}

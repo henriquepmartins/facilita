@@ -11,13 +11,14 @@ function SkeletonWrapper({
   isLoading: boolean;
   fullWidth?: boolean;
 }) {
-  if (isLoading) return children;
-
-  return (
-    <Skeleton className={cn(fullWidth && "w-full")}>
-      <div className="opacity-0">{children}</div>
-    </Skeleton>
-  );
+  if (isLoading) {
+    return (
+      <Skeleton className={cn("h-full", fullWidth && "w-full")}>
+        <div className="opacity-0">{children}</div>
+      </Skeleton>
+    );
+  }
+  return children;
 }
 
 export default SkeletonWrapper;
