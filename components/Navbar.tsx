@@ -1,131 +1,194 @@
 "use client";
 
-import React from "react";
-import Logo, { LogoMobile } from "@/components/Logo";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { Button, buttonVariants } from "./ui/button";
-import { UserButton } from "@clerk/nextjs";
+import {
+  LayoutDashboard,
+  Receipt,
+  Settings,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  Menu,
+} from "lucide-react";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { ThemeSwitcherBtn } from "./ThemeSwitcherBtn";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "./ui/sheet";
-import { Menu } from "lucide-react";
+import Logo from "./Logo";
+import { usePathname } from "next/navigation";
 
-const items = [
-  { label: "Dashboard", href: "/" },
-  { label: "Transações", href: "/transacoes" },
-  { label: "Gerenciamento", href: "/gerenciamento" },
-];
+const navigationItems = {
+  main: {
+    label: "Principal",
+    items: [
+      {
+        title: "Dashboard",
+        href: "/",
+        icon: LayoutDashboard,
+      },
+    ],
+  },
+  finance: {
+    label: "Financeiro",
+    items: [
+      {
+        title: "Transações",
+        href: "/transacoes",
+        icon: Receipt,
+      },
+    ],
+  },
+  settings: {
+    label: "Sistema",
+    items: [
+      {
+        title: "Configurações",
+        href: "/configuracoes",
+        icon: Settings,
+      },
+    ],
+  },
+};
 
-function NavbarItem({
-  link,
-  label,
-  clickCallback,
-}: {
-  link: string;
-  label: string;
-  clickCallback?: () => void;
-}) {
+export function AppSidebar() {
+  const [isOpen, setIsOpen] = useState(true);
   const pathname = usePathname();
-  const isActive = pathname === link;
+  const { user } = useUser();
 
-  return (
-    <div className="relative flex items-center px-4">
-      <Link
-        href={link}
-        className={cn(
-          buttonVariants({ variant: "ghost" }),
-          "w-full justify-start text-lg text-muted-foreground hover:text-foreground",
-          isActive && "text-foreground"
-        )}
-        onClick={() => {
-          if (clickCallback) {
-            clickCallback();
-          }
-        }}
-      >
-        {label}
-      </Link>
-      {isActive && (
-        <div className="absolute -bottom-[2px] left-1/2 hidden h-[2px] w-[80%] -translate-x-1/2 rounded-xl bg-foreground md:block"></div>
-      )}
-    </div>
-  );
-}
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        setIsOpen(false);
+      }
+    };
 
-function DesktopNavbar() {
-  return (
-    <div className="hidden border-separate border-b bg-background md:block">
-      <nav className="container flex items-center justify-between px-8">
-        <div className="flex h-[80px] min-h-[60px] items-center gap-x-4">
-          <Logo />
-          <div className="flex h-full">
-            {items.map((item) => (
-              <NavbarItem
-                key={item.label}
-                link={item.href}
-                label={item.label}
-              />
-            ))}
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <ThemeSwitcherBtn />
-          <UserButton afterSignOutUrl="/sign-in" />
-        </div>
-      </nav>
-    </div>
-  );
-}
+    handleResize();
+    window.addEventListener("resize", handleResize);
 
-function MobileNavbar() {
-  const [isOpen, setIsOpen] = React.useState(false);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-  return (
-    <div className="block border-separate bg-background md:hidden">
-      <nav className="container mt-4 flex items-center justify-between px-8">
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <Menu />
-            </Button>
-          </SheetTrigger>
-          <SheetContent className="w-[400px] sm:w-[540px]" side="left">
-            <SheetTitle className="text-lg font-semibold">Menu</SheetTitle>
-            <div className="mt-6 flex flex-col gap-4">
-              <Logo />
-              <div className="flex flex-col gap-1">
-                {items.map((item) => (
-                  <NavbarItem
-                    key={item.label}
-                    link={item.href}
-                    label={item.label}
-                    clickCallback={() => setIsOpen((prev) => !prev)}
-                  />
-                ))}
-              </div>
-            </div>
-          </SheetContent>
-        </Sheet>
-        <div className="absolute left-1/2 -translate-x-1/2">
-          <LogoMobile />
-        </div>
-        <div className="flex items-center gap-x-4">
-          <ThemeSwitcherBtn />
-          <UserButton afterSignOutUrl="/sign-in" />
-        </div>
-      </nav>
-    </div>
-  );
-}
-
-function Navbar() {
   return (
     <>
-      <DesktopNavbar />
-      <MobileNavbar />
+      {/* Mobile Toggle Button */}
+      <button
+        onClick={() => setIsOpen(true)}
+        className={cn(
+          "fixed left-2 top-2 z-50 p-1 text-muted-foreground opacity-40 transition-opacity hover:opacity-100 lg:hidden",
+          isOpen && "hidden"
+        )}
+      >
+        <Menu className="h-4 w-4" />
+      </button>
+
+      {/* Sidebar */}
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-40 h-screen flex-shrink-0 border-r bg-background transition-all duration-300 lg:sticky lg:top-0",
+          isOpen
+            ? "w-64 translate-x-0 lg:w-72"
+            : "-translate-x-full lg:translate-x-0 lg:w-24 lg:flex lg:flex-col lg:items-center"
+        )}
+      >
+        <div className="flex h-full flex-col">
+          {/* Header */}
+          <div className="flex items-center justify-between p-4">
+            {isOpen && (
+              <div className={cn("transition-all")}>
+                <Logo />
+              </div>
+            )}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="rounded-lg border p-2 hover:bg-muted"
+            >
+              {isOpen ? (
+                <Menu className="h-4 w-4" />
+              ) : (
+                <Menu className="h-4 w-4" />
+              )}
+            </button>
+          </div>
+
+          {/* Search */}
+          <div className="px-4 pb-4">
+            <button
+              className={cn(
+                "flex items-center gap-2 rounded-lg border bg-background text-sm text-muted-foreground",
+                isOpen ? "px-3 py-2 w-full" : "justify-center p-2"
+              )}
+              onClick={() => {}}
+            >
+              <Search className="h-4 w-4" />
+              {isOpen && <span className="ml-1">Buscar...</span>}
+            </button>
+          </div>
+
+          {/* Navigation */}
+          <nav
+            className={cn(
+              "flex-1 px-2 overflow-y-auto mt-4",
+              isOpen ? "space-y-6" : "flex flex-col items-center gap-4"
+            )}
+          >
+            {Object.entries(navigationItems).map(([key, section]) => (
+              <div key={key} className="w-full">
+                {isOpen && (
+                  <h4 className="px-2 text-xs mb-1 font-semibold text-muted-foreground">
+                    {section.label}
+                  </h4>
+                )}
+
+                {section.items.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      "flex items-center rounded-lg text-sm font-medium hover:bg-muted",
+                      isOpen ? "gap-3 px-2 py-2" : "justify-center p-2 w-full",
+                      pathname === item.href && "bg-muted"
+                    )}
+                  >
+                    <item.icon className="h-5 w-5" />
+                    {isOpen && <span className="flex-1">{item.title}</span>}
+                  </a>
+                ))}
+              </div>
+            ))}
+          </nav>
+
+          {/* Footer */}
+          <div
+            className={cn(
+              "border-t p-4",
+              isOpen
+                ? "flex items-center gap-4"
+                : "flex flex-col items-center gap-4"
+            )}
+          >
+            {isOpen ? (
+              <>
+                <UserButton afterSignOutUrl="/" />
+                <div className="flex flex-col min-w-0">
+                  <p className="truncate text-sm font-medium">
+                    {user?.firstName}
+                  </p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {user?.emailAddresses?.[0]?.emailAddress}
+                  </p>
+                </div>
+                <ThemeSwitcherBtn />
+              </>
+            ) : (
+              <>
+                <ThemeSwitcherBtn />
+                <div className="mt-2">
+                  <UserButton afterSignOutUrl="/" />
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </aside>
     </>
   );
 }
-
-export default Navbar;
