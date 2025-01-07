@@ -12,7 +12,7 @@ const getHistoryDataSchema = z.object({
 });
 
 export async function GET(request: Request) {
-  const user = currentUser();
+  const user = await currentUser();
   if (!user) {
     redirect("/sign-in");
   }
