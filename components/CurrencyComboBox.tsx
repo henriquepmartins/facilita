@@ -137,7 +137,7 @@ function OptionList({
     <Command>
       <CommandInput placeholder="Filtrar moedas..." />
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
         <CommandGroup>
           {Currencies.map((currency: Currency) => (
             <CommandItem

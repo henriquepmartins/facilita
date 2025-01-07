@@ -29,7 +29,7 @@ function ManagePage() {
   return (
     <>
       {/* Header */}
-      <div className="border-b bg-card">
+      <div className="border-b bg-card mt-6">
         <div className="container flex flex-wrap items-center justify-between gap-6">
           <div>
             <p className="text-xl font-semibold">Configurações</p>

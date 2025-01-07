@@ -46,7 +46,8 @@ function DeleteCategoryDialog({ category, trigger }: Props) {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Você tem certeza que deseja deletar a categoria "{category.name}" ?
+            Você tem certeza que deseja deletar a categoria &quot;
+            {category.name}&quot; ?
           </AlertDialogTitle>
           <AlertDialogDescription>
             Essa ação não pode ser desfeita. Todos os lançamentos associados a

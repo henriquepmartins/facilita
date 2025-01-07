@@ -9,6 +9,7 @@ import {
   Search,
   ChevronLeft,
   ChevronRight,
+  Menu,
 } from "lucide-react";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { ThemeSwitcherBtn } from "./ThemeSwitcherBtn";
@@ -76,7 +77,7 @@ export function AppSidebar() {
           isOpen && "hidden"
         )}
       >
-        <ChevronRight className="h-4 w-4" />
+        <Menu className="h-4 w-4" />
       </button>
 
       {/* Sidebar */}
@@ -101,9 +102,9 @@ export function AppSidebar() {
               className="rounded-lg border p-2 hover:bg-muted"
             >
               {isOpen ? (
-                <ChevronLeft className="h-4 w-4" />
+                <Menu className="h-4 w-4" />
               ) : (
-                <ChevronRight className="h-4 w-4" />
+                <Menu className="h-4 w-4" />
               )}
             </button>
           </div>

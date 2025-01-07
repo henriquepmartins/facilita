@@ -38,7 +38,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CreateTransaction } from "../_actions/transactions";
 import { toast } from "sonner";
-import { CreateCategorySchemaType } from "@/schema/categoires";
 import { DateToUTCDate } from "@/lib/helpers";
 
 interface Props {
@@ -141,12 +140,12 @@ function CreateTransactionDialog({ trigger, type }: Props) {
               name="amount"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Quantidade</FormLabel>
+                  <FormLabel>Valor</FormLabel>
                   <FormControl>
                     <Input defaultValue={0} type="number" {...field} />
                   </FormControl>
                   <FormDescription>
-                    Quantidade da transação (obrigatório)
+                    Valor da transação (obrigatório)
                   </FormDescription>
                 </FormItem>
               )}
