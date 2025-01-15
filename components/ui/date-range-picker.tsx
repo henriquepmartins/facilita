@@ -1,7 +1,13 @@
 /* eslint-disable max-lines */
 "use client";
 
-import React, { type FC, useState, useEffect, useRef } from "react";
+import React, {
+  type FC,
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import { Button } from "./button";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { Calendar } from "./calendar";
@@ -143,9 +149,10 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
     };
   }, []);
 
-  const getPresetRange = (presetName: string): DateRange => {
+  const getPresetRange = useCallback((presetName: string): DateRange => {
     const preset = PRESETS.find(({ name }) => name === presetName);
     if (!preset) throw new Error(`Unknown date range preset: ${presetName}`);
+
     const from = new Date();
     const to = new Date();
     const first = from.getDate() - from.getDay();
@@ -202,7 +209,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
     }
 
     return { from, to };
-  };
+  }, []);
 
   const setPreset = (preset: string): void => {
     const range = getPresetRange(preset);
@@ -226,21 +233,19 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
     }
   };
 
-  const checkPreset = (): void => {
+  const checkPreset = useCallback((): void => {
     for (const preset of PRESETS) {
       const presetRange = getPresetRange(preset.name);
 
       const normalizedRangeFrom = new Date(range.from);
       normalizedRangeFrom.setHours(0, 0, 0, 0);
-      const normalizedPresetFrom = new Date(
-        presetRange.from.setHours(0, 0, 0, 0)
-      );
+      const normalizedPresetFrom = new Date(presetRange.from);
+      normalizedPresetFrom.setHours(0, 0, 0, 0);
 
-      const normalizedRangeTo = new Date(range.to ?? 0);
+      const normalizedRangeTo = new Date(range.to || range.from);
       normalizedRangeTo.setHours(0, 0, 0, 0);
-      const normalizedPresetTo = new Date(
-        presetRange.to?.setHours(0, 0, 0, 0) ?? 0
-      );
+      const normalizedPresetTo = new Date(presetRange.to || presetRange.from);
+      normalizedPresetTo.setHours(0, 0, 0, 0);
 
       if (
         normalizedRangeFrom.getTime() === normalizedPresetFrom.getTime() &&
@@ -252,7 +257,11 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
     }
 
     setSelectedPreset(undefined);
-  };
+  }, [range, getPresetRange]);
+
+  useEffect(() => {
+    checkPreset();
+  }, [checkPreset]);
 
   const resetValues = (): void => {
     setRange({
@@ -289,7 +298,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
 
   useEffect(() => {
     checkPreset();
-  }, [range]);
+  }, [range, checkPreset]);
 
   const PresetButton = ({
     preset,
@@ -330,7 +339,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
       openedRangeRef.current = range;
       openedRangeCompareRef.current = rangeCompare;
     }
-  }, [isOpen]);
+  }, [isOpen, range, rangeCompare]);
 
   return (
     <Popover

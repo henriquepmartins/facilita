@@ -8,9 +8,7 @@ import {
   ColumnFiltersState,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
   getSortedRowModel,
-  getPaginationRowModel,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
@@ -155,6 +153,7 @@ function TransactionTable({ from, to }: Props) {
       ).then((res) => res.json()),
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleExportCSV = (data: any[]) => {
     try {
       const formattedData = data.map((row) => ({
@@ -173,8 +172,8 @@ function TransactionTable({ from, to }: Props) {
     }
   };
 
-  const table = useReactTable({
-    data: history.data ?? emptyData,
+  const table = useReactTable<TransactionHistoryRow>({
+    data: (history.data as TransactionHistoryRow[]) ?? emptyData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     state: {
@@ -184,8 +183,6 @@ function TransactionTable({ from, to }: Props) {
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
   });
 
   const categoriesOptions = useMemo(() => {

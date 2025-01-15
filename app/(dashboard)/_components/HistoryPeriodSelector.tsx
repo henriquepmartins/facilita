@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Period, Timeframe } from "@/lib/types";
-import React from "react";
+import React, { useEffect } from "react";
 import { GetHistoryPeriodsResponseType } from "@/app/api/history-periods/route";
 
 interface Props {
@@ -27,12 +27,12 @@ function HistoryPeriodSelector({
 }: Props) {
   const queryClient = useQueryClient();
 
-  React.useEffect(() => {
+  useEffect(() => {
     queryClient.prefetchQuery({
       queryKey: ["overview", "history", "periods"],
       queryFn: () => fetch("/api/history-periods").then((res) => res.json()),
     });
-  }, []);
+  }, [queryClient]);
 
   const { data: years = [], isLoading } =
     useQuery<GetHistoryPeriodsResponseType>({

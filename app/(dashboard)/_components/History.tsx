@@ -163,6 +163,7 @@ function History({ userSettings }: { userSettings: UserSettings }) {
 
 export default History;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function CustomTooltip({ formatter, active, payload }: any) {
   if (!active || !payload || payload.length === 0) return null;
 

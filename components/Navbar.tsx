@@ -2,15 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import {
-  LayoutDashboard,
-  Receipt,
-  Settings,
-  Search,
-  ChevronLeft,
-  ChevronRight,
-  Menu,
-} from "lucide-react";
+import { LayoutDashboard, Receipt, Settings, Search, Menu } from "lucide-react";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { ThemeSwitcherBtn } from "./ThemeSwitcherBtn";
 import Logo from "./Logo";

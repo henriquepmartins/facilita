@@ -154,6 +154,7 @@ function CreateTransactionDialog({ trigger, type }: Props) {
               <FormField
                 control={form.control}
                 name="category"
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Categoria</FormLabel>
@@ -207,10 +208,6 @@ function CreateTransactionDialog({ trigger, type }: Props) {
                           }}
                           initialFocus
                           className="bg-popover rounded-md w-full"
-                          popoverProps={{
-                            side: "top",
-                            align: "start",
-                          }}
                           classNames={{
                             head_row: "flex justify-between",
                             head_cell:

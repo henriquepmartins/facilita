@@ -3,7 +3,7 @@
 import * as Headless from "@headlessui/react";
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import React, { Fragment, forwardRef, useId } from "react";
+import React, { Fragment, forwardRef, useId, useState } from "react";
 import { TouchTarget } from "./button";
 import Link from "next/link";
 
@@ -117,7 +117,7 @@ export function SidebarMenu({
 }: React.ComponentPropsWithoutRef<typeof Headless.Disclosure> & {
   label: string;
 }) {
-  let id = useId();
+  const id = useId();
 
   return (
     <Headless.Disclosure
@@ -175,10 +175,16 @@ export function SidebarMenu({
 }
 
 export function SidebarMobileNav({ children }: { children: React.ReactNode }) {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <Headless.Dialog as={Fragment}>
+    <Headless.Dialog
+      as={Fragment}
+      open={isOpen}
+      onClose={() => setIsOpen(false)}
+    >
+      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
       <Headless.Dialog.Panel className="fixed inset-0 z-50 flex items-start overflow-y-auto bg-white pr-10 dark:bg-zinc-900 lg:hidden">
-        <Headless.Dialog.Overlay />
         {children}
       </Headless.Dialog.Panel>
     </Headless.Dialog>

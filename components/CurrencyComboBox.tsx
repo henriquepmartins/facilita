@@ -59,6 +59,7 @@ export function CurrencyComboBox() {
         Currencies.find((c) => c.value === data.currency) ?? null
       );
     },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onError: (e) => {
       toast.error("A moeda não pode ser atualizada.");
     },

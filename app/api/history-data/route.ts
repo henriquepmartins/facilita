@@ -3,6 +3,7 @@ import { Period, Timeframe } from "@/lib/types";
 import { currentUser } from "@clerk/nextjs/server";
 import { getDaysInMonth } from "date-fns";
 import { redirect } from "next/navigation";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 
 const getHistoryDataSchema = z.object({
@@ -11,7 +12,7 @@ const getHistoryDataSchema = z.object({
   year: z.coerce.number().min(2000).max(3000),
 });
 
-export async function GET(request: Request) {
+export async function GET(request: Request): Promise<Response> {
   const user = await currentUser();
   if (!user) {
     redirect("/sign-in");
@@ -29,11 +30,9 @@ export async function GET(request: Request) {
   });
 
   if (!queryParams.success) {
-    return (
-      Response.json(queryParams.error.message),
-      {
-        status: 400,
-      }
+    return NextResponse.json(
+      { error: queryParams.error.message },
+      { status: 400 }
     );
   }
 
@@ -42,7 +41,7 @@ export async function GET(request: Request) {
     year: queryParams.data.year,
   });
 
-  return Response.json(data);
+  return NextResponse.json(data);
 }
 
 export type GetHistoryDataResponseType = Awaited<
