@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<h1 align="center" id="title">Facilita$</h1>
 
-## Getting Started
+<p align="center"><img src="https://socialify.git.ci/henriquepmartins/facilita/image?description=1&amp;language=1&amp;name=1&amp;owner=1&amp;pattern=Circuit+Board&amp;theme=Light" alt="project-image"></p>
 
-First, run the development server:
+<p id="description">Facilita$ is an app to help you track your incomes and expenses to get more involved into them.Choose your currency see your transactions with charts create categories and much more!</p>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+<h2>🚀 Demo</h2>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[https://facilita-gold.vercel.app/](https://facilita-gold.vercel.app/)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+<h2>Project Screenshots:</h2>
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+<img src="https://utfs.io/f/NMP1doFX1RuGYSfrZNRdxU6NyBuemGo78aEf2lwvkXDItnAM" alt="project-screenshot" width="400" height="400/">
 
-## Learn More
+<img src="https://utfs.io/f/NMP1doFX1RuGNExpbbFX1RuGIsjB8fvcJZ3eWFdhbQAVCxT2" alt="project-screenshot" width="400" height="400/">
 
-To learn more about Next.js, take a look at the following resources:
+<img src="https://utfs.io/f/NMP1doFX1RuGkdDv3TcmoOs8F4Z95tguaYKckn0PMQ1vC2NL" alt="project-screenshot" width="400" height="400/">
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+  
+  
+<h2>🧐 Features</h2>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Here're some of the project's best features:
 
-## Deploy on Vercel
+*   track finances
+*   easy-view
+*   create-categories
+*   ligth-and-dark-mode
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+  
+  
+<h2>💻 Built with</h2>
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Technologies used in the project:
+
+*   Next.js 15
+*   PostgreSQL
+*   PrismaORM
